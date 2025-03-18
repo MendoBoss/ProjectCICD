@@ -3,110 +3,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ma Todo List</title>
+    <title>To-Do List Moderne</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f4;
-        }
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        .todo-container {
-            width: 400px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
 
-        .todo-header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
+.container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
 
-        .todo-input {
-            width: calc(100% - 22px);
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
+h1 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #333;
+}
 
-        .todo-list {
-            list-style: none;
-            padding: 0;
-        }
+.input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 1.5rem;
+}
 
-        .todo-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-        }
+#taskInput {
+    flex: 1;
+    padding: 10px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
 
-        .todo-item:last-child {
-            border-bottom: none;
-        }
+#addTaskBtn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
 
-        .todo-item.completed {
-            text-decoration: line-through;
-            color: #aaa;
-        }
+#addTaskBtn:hover {
+    background-color: #0056b3;
+}
 
-        .todo-item button {
-            background-color: #f00;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
+#taskList {
+    list-style-type: none;
+}
+
+#taskList li {
+    background: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+#taskList li:hover {
+    background-color: #f1f1f1;
+}
+
+#taskList li button {
+    background-color: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#taskList li button:hover {
+    background-color: #cc0000;
+}
     </style>
 </head>
 <body>
-
-<div class="todo-container">
-    <div class="todo-header">
-        <h1>Ma Todo List</h1>
+    <div class="container">
+        <h1>Ma To-Do List</h1>
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Ajouter une nouvelle tâche...">
+            <button id="addTaskBtn">Ajouter</button>
+        </div>
+        <ul id="taskList"></ul>
     </div>
-    <input type="text" id="todoInput" class="todo-input" placeholder="Ajouter une tâche...">
-    <ul id="todoList" class="todo-list">
-        </ul>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const taskInput = document.getElementById('taskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const taskList = document.getElementById('taskList');
 
-<script>
-    const todoInput = document.getElementById('todoInput');
-    const todoList = document.getElementById('todoList');
-
-    todoInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && todoInput.value.trim() !== '') {
-            addTask(todoInput.value);
-            todoInput.value = '';
+    // Ajouter une tâche
+    addTaskBtn.addEventListener('click', () => {
+        const taskText = taskInput.value.trim();
+        if (taskText !== '') {
+            addTask(taskText);
+            taskInput.value = '';
         }
     });
 
-    function addTask(task) {
+    // Ajouter une tâche avec la touche Entrée
+    taskInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const taskText = taskInput.value.trim();
+            if (taskText !== '') {
+                addTask(taskText);
+                taskInput.value = '';
+            }
+        }
+    });
+
+    // Fonction pour ajouter une tâche
+    function addTask(taskText) {
         const li = document.createElement('li');
-        li.className = 'todo-item';
-        li.innerHTML = `
-            <span>${task}</span>
-            <button onclick="removeTask(this)">Supprimer</button>
-        `;
-        li.addEventListener('click', function() {
-            this.classList.toggle('completed');
+        li.textContent = taskText;
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Supprimer';
+        deleteBtn.addEventListener('click', () => {
+            taskList.removeChild(li);
         });
-        todoList.appendChild(li);
-    }
 
-    function removeTask(button) {
-        button.parentElement.remove();
+        li.appendChild(deleteBtn);
+        taskList.appendChild(li);
     }
-</script>
-
+});
+    </script>
 </body>
 </html>
